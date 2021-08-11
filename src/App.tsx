@@ -11,16 +11,16 @@ const App: FC = () => {
   return (
     <>
       <GlobalStyles />
+      <button
+        onClick={() => {
+          setAddTodoOpen(true);
+        }}
+      >
+        open
+      </button>
       <TodoProvider>
         <AddTodoModal open={addTodoOpen} setOpen={setAddTodoOpen} />
         <TodoList />
-        <button
-          onClick={() => {
-            setAddTodoOpen(true);
-          }}
-        >
-          open
-        </button>
       </TodoProvider>
     </>
   );
