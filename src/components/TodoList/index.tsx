@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import useTodo from '../../hooks/useTodo';
+import Modal from '../Modal';
 import TodoItem from '../TodoItem';
 
 const TodoList: FC = () => {
