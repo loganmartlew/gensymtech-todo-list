@@ -1,38 +1,56 @@
 import { useState, useEffect, createContext, FC } from 'react';
-import { todosRef } from '../util/firebase';
-import subscribeToCollection from '../util/subscribeToCollection';
+import { getTodoRefById, todosRef } from '../util/firebase';
 import Todo from '../types/Todo';
+import { onSnapshot, addDoc, deleteDoc, updateDoc } from '@firebase/firestore';
 
 interface TodoContext {
   todos: Todo[];
+  addTodo: (todo: Todo) => void;
+  deleteTodo: (id: string) => void;
+  loading: boolean;
 }
 
-const initialTodos: Todo[] = [];
-
-const initialContext = {
-  todos: initialTodos,
-};
-
 // eslint-disable-next-line
-export const TodoContext = createContext<TodoContext>(initialContext);
+export const TodoContext = createContext<TodoContext>({} as TodoContext);
 
 export const TodoProvider: FC = ({ children }) => {
-  const [todos, setTodos] = useState<Todo[]>(initialTodos);
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const unsub = subscribeToCollection(todosRef, data => {
+    setLoading(true);
+
+    const unsub = onSnapshot(todosRef, data => {
       const todos = data.docs.map(
         doc => ({ ...doc.data(), id: doc.id } as Todo)
       );
 
       setTodos(todos);
+      setLoading(false);
     });
 
     return unsub;
   }, []);
 
+  const addTodo = async (todo: Todo) => {
+    await addDoc(todosRef, {
+      title: todo.title,
+      description: todo.description ?? '',
+      complete: todo.complete,
+    });
+  };
+
+  const deleteTodo = async (id: string) => {
+    const todoRef = getTodoRefById(id);
+
+    await deleteDoc(todoRef);
+  };
+
   const value = {
     todos,
+    addTodo,
+    deleteTodo,
+    loading,
   };
 
   return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
