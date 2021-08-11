@@ -1,12 +1,10 @@
 import { FC } from 'react';
-import Todo from '../../types/Todo';
+import useTodo from '../../hooks/useTodo';
 import TodoItem from '../TodoItem';
 
-interface Props {
-  todos: Todo[];
-}
+const TodoList: FC = () => {
+  const { todos } = useTodo();
 
-const TodoList: FC<Props> = ({ todos }) => {
   return (
     <>
       {todos.map(todo => (

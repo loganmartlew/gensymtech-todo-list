@@ -1,10 +1,15 @@
 import { FC } from 'react';
 import TodoList from './components/TodoList';
-
-import todos from './test-todos';
+import { TodoProvider } from './context/todoContext';
 
 const App: FC = () => {
-  return <TodoList todos={todos} />;
+  return (
+    <>
+      <TodoProvider>
+        <TodoList />
+      </TodoProvider>
+    </>
+  );
 };
 
 export default App;
