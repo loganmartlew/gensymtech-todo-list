@@ -11,9 +11,22 @@ export default createGlobalStyle`
     font-family: 'Noto Sans', sans-serif;
   }
 
+  li {
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
   button {
     border: none;
     background: none;
     cursor: pointer;
+  }
+
+  input, textarea {
+    font-family: inherit;
   }
 `;

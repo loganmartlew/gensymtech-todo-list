@@ -1,11 +1,11 @@
-import { FC, Dispatch, SetStateAction, MouseEventHandler } from 'react';
+import { FC, MouseEventHandler } from 'react';
 import { createPortal } from 'react-dom';
 import { MdClose } from 'react-icons/md';
 import { ModalPageWrapper, ModalContainer, ModalCloseBtn } from './ModalStyles';
 
 interface Props {
   open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  setOpen: (value: boolean) => void;
   overlayColor?: string;
   backgroundColor?: string;
 }
