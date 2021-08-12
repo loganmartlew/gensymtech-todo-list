@@ -8,7 +8,7 @@ interface TodoContext {
   todos: Todo[];
   addTodo: (todo: Todo) => void;
   deleteTodo: (id: string) => void;
-  updateTodo: () => void;
+  updateTodo: (id: string, todo: Todo) => void;
   updateTodoOrders: (todos: Todo[]) => void;
   loading: boolean;
 }
@@ -51,7 +51,11 @@ export const TodoProvider: FC = ({ children }) => {
     await deleteDoc(todoRef);
   };
 
-  const updateTodo = async () => {};
+  const updateTodo = async (id: string, todo: Todo) => {
+    const todoRef = getTodoRefById(id);
+
+    await updateDoc(todoRef, { ...todo });
+  };
 
   const updateTodoOrders = async (todos: Todo[]) => {
     setTodos(todos);

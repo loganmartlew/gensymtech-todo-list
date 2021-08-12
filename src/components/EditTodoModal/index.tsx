@@ -7,6 +7,7 @@ import Todo from '../../types/Todo';
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
+  todo?: Todo;
 }
 
 interface FormValues {
@@ -14,9 +15,17 @@ interface FormValues {
   description: string;
 }
 
-const AddTodoModal: FC<Props> = ({ open, setOpen }) => {
-  const { register, handleSubmit, reset } = useForm<FormValues>();
-  const { addTodo } = useTodo();
+const EditTodoModal: FC<Props> = ({ open, setOpen, todo }) => {
+  const defaultValues = {
+    title: todo?.title || '',
+    description: todo?.description || '',
+  };
+
+  const { register, handleSubmit, reset } = useForm<FormValues>({
+    defaultValues,
+  });
+
+  const { addTodo, updateTodo } = useTodo();
 
   const setOpenAndClearForm = (newValue: boolean) => {
     if (newValue === false) {
@@ -27,15 +36,25 @@ const AddTodoModal: FC<Props> = ({ open, setOpen }) => {
   };
 
   const submit = (data: FormValues) => {
-    const newTodo: Todo = {
-      id: '',
-      title: data.title,
-      description: data.description,
-      complete: false,
-      isOrdered: false,
-    };
+    if (todo) {
+      const newTodo: Todo = {
+        ...todo,
+        title: data.title,
+        description: data.description,
+      };
 
-    addTodo(newTodo);
+      updateTodo(todo.id, newTodo);
+    } else {
+      const newTodo: Todo = {
+        id: '',
+        title: data.title,
+        description: data.description,
+        complete: false,
+        isOrdered: false,
+      };
+
+      addTodo(newTodo);
+    }
     setOpenAndClearForm(false);
   };
 
@@ -48,10 +67,10 @@ const AddTodoModal: FC<Props> = ({ open, setOpen }) => {
         <label htmlFor='description'>Description</label>
         <textarea {...register('description')} id='description' />
 
-        <button type='submit'>Add Todo</button>
+        <button type='submit'>Save Todo</button>
       </form>
     </Modal>
   );
 };
 
-export default AddTodoModal;
+export default EditTodoModal;

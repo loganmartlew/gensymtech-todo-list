@@ -1,5 +1,5 @@
 import { useState, FC } from 'react';
-import AddTodoModal from './components/AddTodoModal';
+import AddTodoModal from './components/EditTodoModal';
 import TodoList from './components/TodoList';
 import { TodoProvider } from './context/todoContext';
 import GlobalStyles from './styles/GlobalStyles';

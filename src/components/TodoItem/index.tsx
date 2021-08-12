@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { MdDragHandle } from 'react-icons/md';
+import { useState, FC, MouseEventHandler } from 'react';
+import { MdDragHandle, MdEdit, MdDelete } from 'react-icons/md';
 import {
   TodoContainer,
   DragIcon,
@@ -8,8 +8,10 @@ import {
   TodoContent,
   TodoDescription,
 } from './TodoItemStyles';
-import Todo from '../../types/Todo';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
+import useTodo from '../../hooks/useTodo';
+import Todo from '../../types/Todo';
+import EditTodoModal from '../EditTodoModal';
 
 interface Props {
   todo: Todo;
@@ -17,8 +19,29 @@ interface Props {
 }
 
 const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
+  const [editing, setEditing] = useState<boolean>(false);
+
+  const { deleteTodo } = useTodo();
+
+  const handleEdit: MouseEventHandler = e => {
+    e.preventDefault();
+
+    setEditing(true);
+  };
+
+  const handleDelete: MouseEventHandler = e => {
+    e.preventDefault();
+
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete '${todo.title}?'`
+    );
+
+    if (confirmDelete) deleteTodo(todo.id);
+  };
+
   return (
     <TodoContainer>
+      <EditTodoModal open={editing} setOpen={setEditing} todo={todo} />
       <TodoHeading>
         <DragIcon {...dragHandleProps}>
           <MdDragHandle />
@@ -30,6 +53,14 @@ const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
           {todo.description || 'No description.'}
         </TodoDescription>
       </TodoContent>
+      <div>
+        <button onClick={handleEdit}>
+          <MdEdit />
+        </button>
+        <button onClick={handleDelete}>
+          <MdDelete />
+        </button>
+      </div>
     </TodoContainer>
   );
 };
