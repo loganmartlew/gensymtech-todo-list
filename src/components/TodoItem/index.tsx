@@ -1,4 +1,4 @@
-import { useState, FC, MouseEventHandler } from 'react';
+import { useState, FC, MouseEventHandler, ChangeEventHandler } from 'react';
 import { MdDragHandle, MdEdit, MdDelete } from 'react-icons/md';
 import {
   TodoContainer,
@@ -12,6 +12,7 @@ import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import useTodo from '../../hooks/useTodo';
 import Todo from '../../types/Todo';
 import EditTodoModal from '../EditTodoModal';
+import Checkbox from '../Checkbox';
 
 interface Props {
   todo: Todo;
@@ -21,7 +22,7 @@ interface Props {
 const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
   const [editing, setEditing] = useState<boolean>(false);
 
-  const { deleteTodo } = useTodo();
+  const { deleteTodo, updateTodo } = useTodo();
 
   const handleEdit: MouseEventHandler = e => {
     e.preventDefault();
@@ -39,6 +40,15 @@ const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
     if (confirmDelete) deleteTodo(todo.id);
   };
 
+  const toggleComplete = () => {
+    const newTodo: Todo = {
+      ...todo,
+      complete: !todo.complete,
+    };
+
+    updateTodo(todo.id, newTodo);
+  };
+
   return (
     <TodoContainer>
       <EditTodoModal open={editing} setOpen={setEditing} todo={todo} />
@@ -47,7 +57,11 @@ const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
       </DragIcon>
       <TodoHeading>
         <TodoTitle>{todo.title}</TodoTitle>
-        <p>X</p>
+        <Checkbox
+          id={todo.id}
+          value={todo.complete}
+          onChange={toggleComplete}
+        />
       </TodoHeading>
       <TodoContent>
         <TodoDescription>
