@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, FC } from 'react';
 import { getTodoRefById, todosRef } from '../util/firebase';
 import Todo from '../types/Todo';
-import { onSnapshot, addDoc, deleteDoc, updateDoc } from '@firebase/firestore';
+import { onSnapshot, addDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import sortTodos from '../util/sortTodos';
 
 interface TodoContext {
@@ -69,7 +69,7 @@ export const TodoProvider: FC = ({ children }) => {
     await Promise.all(promises);
   };
 
-  const value = {
+  const value: TodoContext = {
     todos,
     addTodo,
     deleteTodo,

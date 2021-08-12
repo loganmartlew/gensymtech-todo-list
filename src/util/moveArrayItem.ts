@@ -17,8 +17,6 @@ const moveArrayItem = <T = any>(
   const lhs = arrWithoutItem.slice(0, endIdx);
   const rhs = arrWithoutItem.slice(endIdx, arrWithoutItem.length);
 
-  console.log(lhs, rhs);
-
   const newArray = [...lhs, item, ...rhs];
 
   return newArray;

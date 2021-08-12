@@ -42,11 +42,12 @@ const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
   return (
     <TodoContainer>
       <EditTodoModal open={editing} setOpen={setEditing} todo={todo} />
+      <DragIcon {...dragHandleProps}>
+        <MdDragHandle />
+      </DragIcon>
       <TodoHeading>
-        <DragIcon {...dragHandleProps}>
-          <MdDragHandle />
-        </DragIcon>
         <TodoTitle>{todo.title}</TodoTitle>
+        <p>X</p>
       </TodoHeading>
       <TodoContent>
         <TodoDescription>
