@@ -2,7 +2,7 @@ import { useState, useEffect, createContext, FC } from 'react';
 import { getTodoRefById, todosRef } from '../util/firebase';
 import Todo from '../types/Todo';
 import { onSnapshot, addDoc, deleteDoc, updateDoc } from 'firebase/firestore';
-import sortTodos from '../util/sortTodos';
+import arrangeTodos from '../util/arrangeTodos';
 
 interface TodoContext {
   todos: Todo[];
@@ -10,6 +10,8 @@ interface TodoContext {
   deleteTodo: (id: string) => void;
   updateTodo: (id: string, todo: Todo) => void;
   updateTodoOrders: (todos: Todo[]) => void;
+  includeCompleted: boolean;
+  toggleCompletedTodos: () => void;
   loading: boolean;
 }
 
@@ -18,6 +20,7 @@ export const TodoContext = createContext<TodoContext>({} as TodoContext);
 
 export const TodoProvider: FC = ({ children }) => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [includeCompleted, setIncludeCompleted] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -28,14 +31,14 @@ export const TodoProvider: FC = ({ children }) => {
         doc => ({ ...doc.data(), id: doc.id } as Todo)
       );
 
-      const sortedTodos = sortTodos(todos);
+      const arrangedTodos = arrangeTodos(todos, includeCompleted);
 
-      setTodos(sortedTodos);
+      setTodos(arrangedTodos);
       setLoading(false);
     });
 
     return unsub;
-  }, []);
+  }, [includeCompleted]);
 
   const addTodo = async (todo: Todo) => {
     await addDoc(todosRef, {
@@ -69,12 +72,18 @@ export const TodoProvider: FC = ({ children }) => {
     await Promise.all(promises);
   };
 
+  const toggleCompletedTodos = () => {
+    setIncludeCompleted(prev => !prev);
+  };
+
   const value: TodoContext = {
     todos,
     addTodo,
     deleteTodo,
     updateTodo,
     updateTodoOrders,
+    includeCompleted,
+    toggleCompletedTodos,
     loading,
   };
 
