@@ -1,4 +1,4 @@
-import { useState, FC, MouseEventHandler, ChangeEventHandler } from 'react';
+import { useState, FC, MouseEventHandler } from 'react';
 import { MdDragHandle, MdEdit, MdDelete } from 'react-icons/md';
 import {
   TodoContainer,
@@ -57,11 +57,7 @@ const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
       </DragIcon>
       <TodoHeading>
         <TodoTitle>{todo.title}</TodoTitle>
-        <Checkbox
-          id={todo.id}
-          value={todo.complete}
-          onChange={toggleComplete}
-        />
+        <Checkbox value={todo.complete} onClick={toggleComplete} />
       </TodoHeading>
       <TodoContent>
         <TodoDescription>
