@@ -1,8 +1,9 @@
-name: 'My Workflow'
+name: 'Deploy To Netlify'
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
