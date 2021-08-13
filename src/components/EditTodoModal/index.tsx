@@ -13,12 +13,14 @@ interface Props {
 interface FormValues {
   title: string;
   description: string;
+  size: 1 | 2 | 3 | 4 | 5;
 }
 
 const EditTodoModal: FC<Props> = ({ open, setOpen, todo }) => {
   const defaultValues = {
     title: todo?.title || '',
     description: todo?.description || '',
+    size: todo?.size || 1,
   };
 
   const { register, handleSubmit, reset } = useForm<FormValues>({
@@ -51,6 +53,7 @@ const EditTodoModal: FC<Props> = ({ open, setOpen, todo }) => {
         description: data.description,
         complete: false,
         isOrdered: false,
+        size: data.size,
       };
 
       addTodo(newTodo);
@@ -66,6 +69,15 @@ const EditTodoModal: FC<Props> = ({ open, setOpen, todo }) => {
 
         <label htmlFor='description'>Description</label>
         <textarea {...register('description')} id='description' />
+
+        <label htmlFor='size'>Project Size</label>
+        <select {...register('size')} id='size'>
+          <option value='1'>1</option>
+          <option value='2'>2</option>
+          <option value='3'>3</option>
+          <option value='4'>4</option>
+          <option value='5'>5</option>
+        </select>
 
         <button type='submit'>Save Todo</button>
       </form>

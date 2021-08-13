@@ -63,6 +63,7 @@ const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
         <TodoDescription>
           {todo.description || 'No description.'}
         </TodoDescription>
+        <span>Size: {todo.size}</span>
       </TodoContent>
       <div>
         <button onClick={handleEdit}>

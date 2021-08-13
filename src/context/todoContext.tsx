@@ -45,6 +45,7 @@ export const TodoProvider: FC = ({ children }) => {
       title: todo.title,
       description: todo.description ?? '',
       complete: todo.complete,
+      size: todo.size,
     });
   };
 
