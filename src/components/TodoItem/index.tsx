@@ -9,6 +9,7 @@ import {
   TodoDescription,
 } from './TodoItemStyles';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
+import useAuth from '../../hooks/useAuth';
 import useTodo from '../../hooks/useTodo';
 import Todo from '../../types/Todo';
 import EditTodoModal from '../EditTodoModal';
@@ -22,16 +23,21 @@ interface Props {
 const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
   const [editing, setEditing] = useState<boolean>(false);
 
+  const { isAdmin } = useAuth();
   const { deleteTodo, updateTodo } = useTodo();
 
   const handleEdit: MouseEventHandler = e => {
     e.preventDefault();
+
+    if (!isAdmin) return;
 
     setEditing(true);
   };
 
   const handleDelete: MouseEventHandler = e => {
     e.preventDefault();
+
+    if (!isAdmin) return;
 
     const confirmDelete = window.confirm(
       `Are you sure you want to delete '${todo.title}?'`
@@ -41,6 +47,8 @@ const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
   };
 
   const toggleComplete = () => {
+    if (!isAdmin) return;
+
     const newTodo: Todo = {
       ...todo,
       complete: !todo.complete,
@@ -65,14 +73,16 @@ const TodoItem: FC<Props> = ({ todo, dragHandleProps }) => {
         </TodoDescription>
         <span>Size: {todo.size}</span>
       </TodoContent>
-      <div>
-        <button onClick={handleEdit}>
-          <MdEdit />
-        </button>
-        <button onClick={handleDelete}>
-          <MdDelete />
-        </button>
-      </div>
+      {isAdmin && (
+        <div>
+          <button onClick={handleEdit}>
+            <MdEdit />
+          </button>
+          <button onClick={handleDelete}>
+            <MdDelete />
+          </button>
+        </div>
+      )}
     </TodoContainer>
   );
 };

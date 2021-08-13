@@ -1,8 +1,9 @@
 import { useState, useEffect, createContext, FC } from 'react';
 import { getTodoRefById, todosRef } from '../util/firebase';
-import Todo from '../types/Todo';
 import { onSnapshot, addDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import arrangeTodos from '../util/arrangeTodos';
+import useAuth from '../hooks/useAuth';
+import Todo from '../types/Todo';
 
 interface TodoContext {
   todos: Todo[];
@@ -23,6 +24,8 @@ export const TodoProvider: FC = ({ children }) => {
   const [includeCompleted, setIncludeCompleted] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const { isAdmin } = useAuth();
+
   useEffect(() => {
     setLoading(true);
 
@@ -41,6 +44,8 @@ export const TodoProvider: FC = ({ children }) => {
   }, [includeCompleted]);
 
   const addTodo = async (todo: Todo) => {
+    if (!isAdmin) return;
+
     await addDoc(todosRef, {
       title: todo.title,
       description: todo.description ?? '',
@@ -50,18 +55,24 @@ export const TodoProvider: FC = ({ children }) => {
   };
 
   const deleteTodo = async (id: string) => {
+    if (!isAdmin) return;
+
     const todoRef = getTodoRefById(id);
 
     await deleteDoc(todoRef);
   };
 
   const updateTodo = async (id: string, todo: Todo) => {
+    if (!isAdmin) return;
+
     const todoRef = getTodoRefById(id);
 
     await updateDoc(todoRef, { ...todo });
   };
 
   const updateTodoOrders = async (todos: Todo[]) => {
+    if (!isAdmin) return;
+
     setTodos(todos);
 
     const promises = todos.map(async todo => {

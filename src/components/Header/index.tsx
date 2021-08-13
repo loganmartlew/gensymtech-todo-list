@@ -6,11 +6,11 @@ interface Props {
 }
 
 const Header: FC<Props> = ({ openAddModal }) => {
-  const { signIn, signOut, user } = useAuth();
+  const { signIn, signOut, user, isAdmin } = useAuth();
 
   return (
     <header>
-      <button onClick={openAddModal}>New Todo</button>
+      {isAdmin && <button onClick={openAddModal}>New Todo</button>}
       {user ? (
         <button onClick={signOut}>Sign Out</button>
       ) : (
